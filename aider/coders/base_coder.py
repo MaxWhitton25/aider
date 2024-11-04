@@ -716,6 +716,7 @@ class Coder:
         yield from self.send_message(user_message)
 
     def init_before_message(self):
+        self.test_history = []
         self.aider_edited_files = set()
         self.reflected_message = None
         self.num_reflections = 0
@@ -779,14 +780,14 @@ class Coder:
 
         while message:
             self.reflected_message = None
-            list(self.send_message(message, self.num_reflections, self.max_reflections))
+            list(self.send_message(message))
 
             if not self.reflected_message:
                 break
 
             if self.num_reflections >= self.max_reflections:
                 self.io.tool_warning(f"Only {self.max_reflections} reflections allowed, stopping.")
-                checkout_best_commit()
+                self.checkout_best_commit()
                 return
 
             
@@ -1155,7 +1156,7 @@ class Coder:
 
         return chunks
 
-    def send_message(self, inp, num_reflections, max_reflections, test_performance = []):
+    def send_message(self, inp):
         import openai  # for error codes below
 
         self.cur_messages += [
@@ -1180,7 +1181,7 @@ class Coder:
         self.usage_report = None
         exhausted = False
         interrupted = False
-        self.io.append_chat_history(f"We are on reflection number: {num_reflections} of {max_reflections}")
+        self.io.append_chat_history(f"We are on reflection number: {self.num_reflections} of {self.max_reflections}")
 
         try:
             while True:
@@ -1313,8 +1314,8 @@ class Coder:
             passed, failed = parse_test_results(test_errors)
 
             if test_errors:
-                if performance_improving(test_performance, passed, failed):
-                    test_performance.append((passed, failed))
+                if performance_improving(self.test_history, passed, failed):
+                    self.test_history.append((passed, failed))
                     ok = self.io.confirm_ask("Attempt to fix test errors?")
                     if ok:
                         self.reflected_message = test_errors
@@ -1324,6 +1325,7 @@ class Coder:
                     self.io.append_chat_history("The performance did not improve, so we're going to roll back.")
                     self.repo.revert_to_commit(self.repo.initial_commit_hash)
                     self.num_reflections+=1
+                    self.test_history = []
 
 
         add_rel_files_message = self.check_for_file_mentions(content)
