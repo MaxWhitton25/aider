@@ -14,6 +14,7 @@ import threading
 import time
 import traceback
 import webbrowser
+import re
 from collections import defaultdict
 from datetime import datetime
 from json.decoder import JSONDecodeError
@@ -778,16 +779,17 @@ class Coder:
 
         while message:
             self.reflected_message = None
-            list(self.send_message(message))
+            list(self.send_message(message, self.num_reflections, self.max_reflections))
 
             if not self.reflected_message:
                 break
 
             if self.num_reflections >= self.max_reflections:
                 self.io.tool_warning(f"Only {self.max_reflections} reflections allowed, stopping.")
+                checkout_best_commit()
                 return
 
-            self.num_reflections += 1
+            
             message = self.reflected_message
 
     def check_and_open_urls(self, exc: Exception) -> List[str]:
@@ -1153,7 +1155,7 @@ class Coder:
 
         return chunks
 
-    def send_message(self, inp):
+    def send_message(self, inp, num_reflections, max_reflections, test_performance = []):
         import openai  # for error codes below
 
         self.cur_messages += [
@@ -1178,6 +1180,8 @@ class Coder:
         self.usage_report = None
         exhausted = False
         interrupted = False
+        self.io.append_chat_history(f"We are on reflection number: {num_reflections} of {max_reflections}")
+
         try:
             while True:
                 try:
@@ -1306,12 +1310,21 @@ class Coder:
         if edited and self.auto_test:
             test_errors = self.commands.cmd_test(self.test_cmd)
             self.test_outcome = not test_errors
+            passed, failed = parse_test_results(test_errors)
+
             if test_errors:
-                ok = self.io.confirm_ask("Attempt to fix test errors?")
-                if ok:
-                    self.reflected_message = test_errors
-                    self.update_cur_messages()
-                    return
+                if performance_improving(test_performance, passed, failed):
+                    test_performance.append((passed, failed))
+                    ok = self.io.confirm_ask("Attempt to fix test errors?")
+                    if ok:
+                        self.reflected_message = test_errors
+                        self.update_cur_messages()
+                        return
+                else:
+                    self.io.append_chat_history("The performance did not improve, so we're going to roll back.")
+                    self.repo.revert_to_commit(self.repo.initial_commit_hash)
+                    self.num_reflections+=1
+
 
         add_rel_files_message = self.check_for_file_mentions(content)
         if add_rel_files_message:
@@ -2078,3 +2091,37 @@ class Coder:
             accumulated_output = ""
 
         return accumulated_output
+    def checkout_best_commit(self):
+        best_hash = self.repo.initial_commit_hash
+        most_passes = -1
+        for rollout in self.repos.previous_commit_hashes:
+            self.repo.revert_to_commit(rollout)
+            test_errors = self.commands.cmd_test(self.test_cmd)
+            passed, _ = parse_test_results(test_errors)
+            if passed> most_passes:
+                most_passes = passed
+                best_hash = rollout
+        self.repo.revert_to_commit(best_hash)
+
+
+    
+def parse_test_results(test_string):
+    failed = -1
+    passed = -1  
+    try:
+        failed_match = re.search(r'(\d+)\s+failed', test_string)
+        if failed_match:
+            failed = int(failed_match.group(1))
+        passed_match = re.search(r'(\d+)\s+passed', test_string)
+        if passed_match:
+            passed = int(passed_match.group(1))       
+        return (failed, passed)
+    except Exception:
+        return (-1, -1)
+def performance_improving(history, passed, failed):
+    if history == []:
+        return True
+    if history[-1][0] + history[-1][1] != passed+failed:
+        return True
+    return passed<history[-1][0]
+
