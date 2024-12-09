@@ -1,0 +1,659 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.6, pytest-8.3.3, pluggy-1.5.0
+rootdir: /testbed
+configfile: pytest.ini
+plugins: json-report-1.5.0, metadata-3.1.1, cov-5.0.0
+collected 23 items
+
+tests/test_selector_csstranslator.py FFFF.FFFFF.FFFFFFFFFFFF             [100%]
+
+=================================== FAILURES ===================================
+____________________ HTMLTranslatorTest.test_attr_function _____________________
+
+self = <test_selector_csstranslator.HTMLTranslatorTest testMethod=test_attr_function>
+
+    def test_attr_function(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::attr(name)", "descendant-or-self::*/@name"),
+            ("a::attr(href)", "descendant-or-self::a/@href"),
+            (
+                "a ::attr(img)",
+                "descendant-or-self::a/descendant-or-self::*/@img",
+            ),
+            ("a > ::attr(class)", "descendant-or-self::a/*/@class"),
+        ]
+        for css, xpath in cases:
+>           self.assertEqual(self.c2x(css), xpath, css)
+E           AssertionError: 'descendant-or-self::None' != 'descendant-or-self::*/@name'
+E           - descendant-or-self::None
+E           ?                     ^^
+E           + descendant-or-self::*/@name
+E           ?                     ^^^ ++
+E            : ::attr(name)
+
+tests/test_selector_csstranslator.py:89: AssertionError
+_______________ HTMLTranslatorTest.test_attr_function_exception ________________
+
+self = <test_selector_csstranslator.HTMLTranslatorTest testMethod=test_attr_function_exception>
+
+    def test_attr_function_exception(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::attr(12)", ExpressionError),
+            ("::attr(34test)", ExpressionError),
+            ("::attr(@href)", SelectorSyntaxError),
+        ]
+        for css, exc in cases:
+>           self.assertRaises(exc, self.c2x, css)
+E           AssertionError: ExpressionError not raised by css_to_xpath
+
+tests/test_selector_csstranslator.py:98: AssertionError
+______________ HTMLTranslatorTest.test_pseudo_function_exception _______________
+
+self = <test_selector_csstranslator.HTMLTranslatorTest testMethod=test_pseudo_function_exception>
+
+    def test_pseudo_function_exception(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::attribute(12)", ExpressionError),
+            ("::text()", ExpressionError),
+            ("::attr(@href)", SelectorSyntaxError),
+        ]
+        for css, exc in cases:
+>           self.assertRaises(exc, self.c2x, css)
+E           AssertionError: ExpressionError not raised by css_to_xpath
+
+tests/test_selector_csstranslator.py:136: AssertionError
+_________________ HTMLTranslatorTest.test_text_pseudo_element __________________
+
+self = <test_selector_csstranslator.HTMLTranslatorTest testMethod=test_text_pseudo_element>
+
+    def test_text_pseudo_element(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::text", "descendant-or-self::text()"),
+            ("p::text", "descendant-or-self::p/text()"),
+            ("p ::text", "descendant-or-self::p/descendant-or-self::text()"),
+            ("#id::text", "descendant-or-self::*[@id = 'id']/text()"),
+            ("p#id::text", "descendant-or-self::p[@id = 'id']/text()"),
+            (
+                "p#id ::text",
+                "descendant-or-self::p[@id = 'id']/descendant-or-self::text()",
+            ),
+            ("p#id > ::text", "descendant-or-self::p[@id = 'id']/*/text()"),
+            (
+                "p#id ~ ::text",
+                "descendant-or-self::p[@id = 'id']/following-sibling::*/text()",
+            ),
+            ("a[href]::text", "descendant-or-self::a[@href]/text()"),
+            (
+                "a[href] ::text",
+                "descendant-or-self::a[@href]/descendant-or-self::text()",
+            ),
+            (
+                "p::text, a::text",
+                "descendant-or-self::p/text() | descendant-or-self::a/text()",
+            ),
+        ]
+        for css, xpath in cases:
+>           self.assertEqual(self.c2x(css), xpath, css)
+E           AssertionError: 'descendant-or-self::None' != 'descendant-or-self::text()'
+E           - descendant-or-self::None
+E           ?                     ^^^
+E           + descendant-or-self::text()
+E           ?                     ^ ++++
+E            : ::text
+
+tests/test_selector_csstranslator.py:127: AssertionError
+________________ HTMLTranslatorTest.test_unknown_pseudo_element ________________
+
+self = <test_selector_csstranslator.HTMLTranslatorTest testMethod=test_unknown_pseudo_element>
+
+    def test_unknown_pseudo_element(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::text-node", ExpressionError),
+        ]
+        for css, exc in cases:
+>           self.assertRaises(exc, self.c2x, css)
+E           AssertionError: ExpressionError not raised by css_to_xpath
+
+tests/test_selector_csstranslator.py:143: AssertionError
+___________________ GenericTranslatorTest.test_attr_function ___________________
+
+self = <test_selector_csstranslator.GenericTranslatorTest testMethod=test_attr_function>
+
+    def test_attr_function(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::attr(name)", "descendant-or-self::*/@name"),
+            ("a::attr(href)", "descendant-or-self::a/@href"),
+            (
+                "a ::attr(img)",
+                "descendant-or-self::a/descendant-or-self::*/@img",
+            ),
+            ("a > ::attr(class)", "descendant-or-self::a/*/@class"),
+        ]
+        for css, xpath in cases:
+>           self.assertEqual(self.c2x(css), xpath, css)
+E           AssertionError: 'descendant-or-self::None' != 'descendant-or-self::*/@name'
+E           - descendant-or-self::None
+E           ?                     ^^
+E           + descendant-or-self::*/@name
+E           ?                     ^^^ ++
+E            : ::attr(name)
+
+tests/test_selector_csstranslator.py:89: AssertionError
+______________ GenericTranslatorTest.test_attr_function_exception ______________
+
+self = <test_selector_csstranslator.GenericTranslatorTest testMethod=test_attr_function_exception>
+
+    def test_attr_function_exception(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::attr(12)", ExpressionError),
+            ("::attr(34test)", ExpressionError),
+            ("::attr(@href)", SelectorSyntaxError),
+        ]
+        for css, exc in cases:
+>           self.assertRaises(exc, self.c2x, css)
+E           AssertionError: ExpressionError not raised by css_to_xpath
+
+tests/test_selector_csstranslator.py:98: AssertionError
+_____________ GenericTranslatorTest.test_pseudo_function_exception _____________
+
+self = <test_selector_csstranslator.GenericTranslatorTest testMethod=test_pseudo_function_exception>
+
+    def test_pseudo_function_exception(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::attribute(12)", ExpressionError),
+            ("::text()", ExpressionError),
+            ("::attr(@href)", SelectorSyntaxError),
+        ]
+        for css, exc in cases:
+>           self.assertRaises(exc, self.c2x, css)
+E           AssertionError: ExpressionError not raised by css_to_xpath
+
+tests/test_selector_csstranslator.py:136: AssertionError
+________________ GenericTranslatorTest.test_text_pseudo_element ________________
+
+self = <test_selector_csstranslator.GenericTranslatorTest testMethod=test_text_pseudo_element>
+
+    def test_text_pseudo_element(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::text", "descendant-or-self::text()"),
+            ("p::text", "descendant-or-self::p/text()"),
+            ("p ::text", "descendant-or-self::p/descendant-or-self::text()"),
+            ("#id::text", "descendant-or-self::*[@id = 'id']/text()"),
+            ("p#id::text", "descendant-or-self::p[@id = 'id']/text()"),
+            (
+                "p#id ::text",
+                "descendant-or-self::p[@id = 'id']/descendant-or-self::text()",
+            ),
+            ("p#id > ::text", "descendant-or-self::p[@id = 'id']/*/text()"),
+            (
+                "p#id ~ ::text",
+                "descendant-or-self::p[@id = 'id']/following-sibling::*/text()",
+            ),
+            ("a[href]::text", "descendant-or-self::a[@href]/text()"),
+            (
+                "a[href] ::text",
+                "descendant-or-self::a[@href]/descendant-or-self::text()",
+            ),
+            (
+                "p::text, a::text",
+                "descendant-or-self::p/text() | descendant-or-self::a/text()",
+            ),
+        ]
+        for css, xpath in cases:
+>           self.assertEqual(self.c2x(css), xpath, css)
+E           AssertionError: 'descendant-or-self::None' != 'descendant-or-self::text()'
+E           - descendant-or-self::None
+E           ?                     ^^^
+E           + descendant-or-self::text()
+E           ?                     ^ ++++
+E            : ::text
+
+tests/test_selector_csstranslator.py:127: AssertionError
+______________ GenericTranslatorTest.test_unknown_pseudo_element _______________
+
+self = <test_selector_csstranslator.GenericTranslatorTest testMethod=test_unknown_pseudo_element>
+
+    def test_unknown_pseudo_element(self: TranslatorTestProtocol) -> None:
+        cases = [
+            ("::text-node", ExpressionError),
+        ]
+        for css, exc in cases:
+>           self.assertRaises(exc, self.c2x, css)
+E           AssertionError: ExpressionError not raised by css_to_xpath
+
+tests/test_selector_csstranslator.py:143: AssertionError
+_______________________ UtilCss2XPathTest.test_css2xpath _______________________
+
+self = <test_selector_csstranslator.UtilCss2XPathTest testMethod=test_css2xpath>
+
+    def test_css2xpath(self) -> None:
+        from parsel import css2xpath
+    
+        expected_xpath = (
+            "descendant-or-self::*[@class and contains("
+            "concat(' ', normalize-space(@class), ' '), ' some-class ')]"
+        )
+>       self.assertEqual(css2xpath(".some-class"), expected_xpath)
+E       AssertionError: None != "descendant-or-self::*[@class and contain[57 chars] ')]"
+
+tests/test_selector_csstranslator.py:170: AssertionError
+___________________ CSSSelectorTest.test_attribute_function ____________________
+
+self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_attribute_function>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(text=HTMLBODY)
+
+tests/test_selector_csstranslator.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11237973f0>
+text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+type = None, body = b'', encoding = 'utf8', namespaces = None
+root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_text' is not defined
+
+parsel/selector.py:220: NameError
+_____________________ CSSSelectorTest.test_nested_selector _____________________
+
+self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_nested_selector>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(text=HTMLBODY)
+
+tests/test_selector_csstranslator.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11237974d0>
+text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+type = None, body = b'', encoding = 'utf8', namespaces = None
+root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_text' is not defined
+
+parsel/selector.py:220: NameError
+_____________________ CSSSelectorTest.test_pseudoclass_has _____________________
+
+self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_pseudoclass_has>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(text=HTMLBODY)
+
+tests/test_selector_csstranslator.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123797070>
+text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+type = None, body = b'', encoding = 'utf8', namespaces = None
+root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_text' is not defined
+
+parsel/selector.py:220: NameError
+_____________________ CSSSelectorTest.test_selector_simple _____________________
+
+self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_selector_simple>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(text=HTMLBODY)
+
+tests/test_selector_csstranslator.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123615e80>
+text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+type = None, body = b'', encoding = 'utf8', namespaces = None
+root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_text' is not defined
+
+parsel/selector.py:220: NameError
+___________________ CSSSelectorTest.test_text_pseudo_element ___________________
+
+self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_text_pseudo_element>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(text=HTMLBODY)
+
+tests/test_selector_csstranslator.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11237974d0>
+text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+type = None, body = b'', encoding = 'utf8', namespaces = None
+root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_text' is not defined
+
+parsel/selector.py:220: NameError
+_________________ CSSSelectorTestBytes.test_attribute_function _________________
+
+self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_attribute_function>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(body=bytes(HTMLBODY, encoding="utf8"))
+
+tests/test_selector_csstranslator.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11236162e0>
+text = None, type = None
+body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+base_url = None, _expr = None, huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+            root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+            self.root = root
+            self.type = type
+        elif body:
+            if not isinstance(body, bytes):
+                msg = f'body argument should be of type bytes, got {body.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_bytes(body=body, encoding=encoding, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_bytes' is not defined
+
+parsel/selector.py:227: NameError
+__________________ CSSSelectorTestBytes.test_nested_selector ___________________
+
+self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_nested_selector>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(body=bytes(HTMLBODY, encoding="utf8"))
+
+tests/test_selector_csstranslator.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11236166d0>
+text = None, type = None
+body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+base_url = None, _expr = None, huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+            root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+            self.root = root
+            self.type = type
+        elif body:
+            if not isinstance(body, bytes):
+                msg = f'body argument should be of type bytes, got {body.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_bytes(body=body, encoding=encoding, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_bytes' is not defined
+
+parsel/selector.py:227: NameError
+__________________ CSSSelectorTestBytes.test_pseudoclass_has ___________________
+
+self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_pseudoclass_has>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(body=bytes(HTMLBODY, encoding="utf8"))
+
+tests/test_selector_csstranslator.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11236169e0>
+text = None, type = None
+body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+base_url = None, _expr = None, huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+            root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+            self.root = root
+            self.type = type
+        elif body:
+            if not isinstance(body, bytes):
+                msg = f'body argument should be of type bytes, got {body.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_bytes(body=body, encoding=encoding, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_bytes' is not defined
+
+parsel/selector.py:227: NameError
+__________________ CSSSelectorTestBytes.test_selector_simple ___________________
+
+self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_selector_simple>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(body=bytes(HTMLBODY, encoding="utf8"))
+
+tests/test_selector_csstranslator.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123616dd0>
+text = None, type = None
+body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+base_url = None, _expr = None, huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+            root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+            self.root = root
+            self.type = type
+        elif body:
+            if not isinstance(body, bytes):
+                msg = f'body argument should be of type bytes, got {body.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_bytes(body=body, encoding=encoding, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_bytes' is not defined
+
+parsel/selector.py:227: NameError
+________________ CSSSelectorTestBytes.test_text_pseudo_element _________________
+
+self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_text_pseudo_element>
+
+    def setUp(self) -> None:
+>       self.sel = self.sscls(body=bytes(HTMLBODY, encoding="utf8"))
+
+tests/test_selector_csstranslator.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123617150>
+text = None, type = None
+body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+base_url = None, _expr = None, huge_tree = True
+
+    def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
+        self.root: Any
+        if type not in ('html', 'json', 'text', 'xml', None):
+            raise ValueError(f'Invalid type: {type}')
+        if text is None and (not body) and (root is _NOT_SET):
+            raise ValueError('Selector needs text, body, or root arguments')
+        if text is not None and (not isinstance(text, str)):
+            msg = f'text argument should be of type str, got {text.__class__}'
+            raise TypeError(msg)
+        if text is not None:
+            if root is not _NOT_SET:
+                warnings.warn('Selector got both text and root, root is being ignored.', stacklevel=2)
+            if not isinstance(text, str):
+                msg = f'text argument should be of type str, got {text.__class__}'
+                raise TypeError(msg)
+            root, type = _get_root_and_type_from_text(text, input_type=type, base_url=base_url, huge_tree=huge_tree)
+            self.root = root
+            self.type = type
+        elif body:
+            if not isinstance(body, bytes):
+                msg = f'body argument should be of type bytes, got {body.__class__}'
+                raise TypeError(msg)
+>           root, type = _get_root_and_type_from_bytes(body=body, encoding=encoding, input_type=type, base_url=base_url, huge_tree=huge_tree)
+E           NameError: name '_get_root_and_type_from_bytes' is not defined
+
+parsel/selector.py:227: NameError
+--------------------------------- JSON report ----------------------------------
+report saved to: report.json
+=========================== short test summary info ============================
+FAILED tests/test_selector_csstranslator.py::HTMLTranslatorTest::test_attr_function
+FAILED tests/test_selector_csstranslator.py::HTMLTranslatorTest::test_attr_function_exception
+FAILED tests/test_selector_csstranslator.py::HTMLTranslatorTest::test_pseudo_function_exception
+FAILED tests/test_selector_csstranslator.py::HTMLTranslatorTest::test_text_pseudo_element
+FAILED tests/test_selector_csstranslator.py::HTMLTranslatorTest::test_unknown_pseudo_element
+FAILED tests/test_selector_csstranslator.py::GenericTranslatorTest::test_attr_function
+FAILED tests/test_selector_csstranslator.py::GenericTranslatorTest::test_attr_function_exception
+FAILED tests/test_selector_csstranslator.py::GenericTranslatorTest::test_pseudo_function_exception
+FAILED tests/test_selector_csstranslator.py::GenericTranslatorTest::test_text_pseudo_element
+FAILED tests/test_selector_csstranslator.py::GenericTranslatorTest::test_unknown_pseudo_element
+FAILED tests/test_selector_csstranslator.py::UtilCss2XPathTest::test_css2xpath
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTest::test_attribute_function
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTest::test_nested_selector
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTest::test_pseudoclass_has
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTest::test_selector_simple
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTest::test_text_pseudo_element
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTestBytes::test_attribute_function
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTestBytes::test_nested_selector
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTestBytes::test_pseudoclass_has
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTestBytes::test_selector_simple
+FAILED tests/test_selector_csstranslator.py::CSSSelectorTestBytes::test_text_pseudo_element
+========================= 21 failed, 2 passed in 0.26s =========================
+
+
+http://localhost/f..."cool-footer
+Scraping http://localhost/f..."cool-footer...
+For the best web scraping, install Playwright:
+
+/usr/bin/python3.11 -m playwright install --with-deps chromium
+
+See https://aider.chat/docs/install/optional.html#enable-playwright for more info.
+

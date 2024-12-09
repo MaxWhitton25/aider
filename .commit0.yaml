@@ -1,0 +1,4 @@
+base_dir: /home/mmw243/aider/repos
+dataset_name: wentingzhao/commit0_combined
+dataset_split: test
+repo_split: parsel

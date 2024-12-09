@@ -1,0 +1,14 @@
+{
+    "timestamp": "2024-12-09T10:18:11.499290",
+    "total_time_spent": 1948,
+    "total_files_processed": 6,
+    "total_money_spent": 0.18,
+    "repositories": [
+        {
+            "name": "parsel",
+            "time_spent": 1948.7746560573578,
+            "files_processed": 6,
+            "money_spent": 0.18
+        }
+    ]
+}

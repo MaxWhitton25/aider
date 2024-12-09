@@ -45,9 +45,7 @@ class GitRepo:
         commit_prompt=None,
         subtree_only=False,
     ):
-        # used for reverting
-        self.initial_commit_hash = self.get_head_commit_sha()  
-        self.previous_commit_hashes = [] 
+        
 
 
         self.io = io
@@ -97,6 +95,12 @@ class GitRepo:
         # https://github.com/gitpython-developers/GitPython/issues/427
         self.repo = git.Repo(repo_paths.pop(), odbt=git.GitDB)
         self.root = utils.safe_abs_path(self.repo.working_tree_dir)
+
+
+        # used for reverting
+        self.initial_commit_hash = self.get_head_commit_sha()  
+        self.previous_commit_hashes = {}
+
 
         if aider_ignore_file:
             self.aider_ignore_file = Path(aider_ignore_file)
@@ -426,7 +430,13 @@ class GitRepo:
         if not commit:
             return default
         return commit.message
-    
+    def save_current_hash(self, passed, failed):
+        parent_commit = self.repo.head.commit.parents[0]
+        current_commit_hash = self.get_head_commit_sha()
+
+        if (current_commit_hash and current_commit_hash not in self.previous_commit_hashes.keys()) or (parent_commit and parent_commit not in self.previous_commit_hashes.keys()):
+            self.previous_commit_hashes[current_commit_hash] = passed, failed
+     
     def revert_to_commit(self, commit_hash):
         """
         Check out the specified commit hash, reverting the repository to that state.
@@ -434,11 +444,13 @@ class GitRepo:
         Parameters:
             commit_hash (str): The commit hash to revert to.
         """
+        parent_commit = self.repo.head.commit.parents[0]
         current_commit_hash = self.get_head_commit_sha()
 
-        if current_commit_hash and current_commit_hash not in self.previous_commit_hashes:
-            self.previous_commit_hashes.append(current_commit_hash)
-
+        # if current_commit_hash and current_commit_hash not in self.previous_commit_hashes.keys():
+        #     self.previous_commit_hashes[current_commit_hash] = passed
+        # if parent_commit and parent_commit not in self.previous_commit_hashes.keys():
+        #     self.previous_commit_hashes[parent_commit] = passed
         try:
             self.repo.git.checkout(commit_hash)
             self.io.tool_output(f"Reverted to commit {commit_hash}.", bold=True)

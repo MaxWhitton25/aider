@@ -20,7 +20,7 @@ from datetime import datetime
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import List
-
+import csv
 from aider import __version__, models, prompts, urls, utils
 from aider.analytics import Analytics
 from aider.commands import Commands
@@ -37,6 +37,8 @@ from aider.utils import format_content, format_messages, format_tokens, is_image
 from ..dump import dump  # noqa: F401
 from .chat_chunks import ChatChunks
 
+# import networkx as nx
+# import matplotlib.pyplot as plt
 
 class MissingAPIKeyError(ValueError):
     pass
@@ -717,13 +719,14 @@ class Coder:
 
     def init_before_message(self):
         self.test_history = []
+        # self.commit_graph =  nx.DiGraph()
         self.aider_edited_files = set()
         self.reflected_message = None
         self.num_reflections = 0
         self.lint_outcome = None
         self.test_outcome = None
         self.shell_commands = []
-
+        self.commits_since_initial = 0
         if self.repo:
             self.commit_before_message.append(self.repo.get_head_commit_sha())
 
@@ -786,7 +789,7 @@ class Coder:
                 break
 
             if self.num_reflections >= self.max_reflections:
-                self.io.tool_warning(f"Only {self.max_reflections} reflections allowed, stopping.")
+                self.io.tool_warning(f"Only {self.max_reflections} rollouts allowed, stopping.")
                 self.checkout_best_commit()
                 return
 
@@ -1181,7 +1184,7 @@ class Coder:
         self.usage_report = None
         exhausted = False
         interrupted = False
-        self.io.append_chat_history(f"We are on reflection number: {self.num_reflections} of {self.max_reflections}")
+        self.io.append_chat_history(f"We are on rollout number: {self.num_reflections} of {self.max_reflections}")
 
         try:
             while True:
@@ -1311,21 +1314,42 @@ class Coder:
         if edited and self.auto_test:
             test_errors = self.commands.cmd_test(self.test_cmd)
             self.test_outcome = not test_errors
-            passed, failed = parse_test_results(test_errors)
+            failed, passed = parse_test_results(test_errors)
 
             if test_errors:
+
+                # TO MAKE GRAPH
+                # self.commit_graph.add_node(self.repo.get_head_commit_sha())
+                
+                # if self.commits_since_initial > 1:
+                #     self.commit_graph.add_edge(self.last_added, self.repo.get_head_commit_sha)
+                # else:
+                #     self.commit_graph.add_edge(self.repo.initial_commit_hash, self.repo.get_head_commit_sha)
+                # self.last_added = self.repo.get_head_commit_sha()
+
+                #
+
                 if performance_improving(self.test_history, passed, failed):
                     self.test_history.append((passed, failed))
+                    self.repo.save_current_hash(passed, failed)
+                    
                     ok = self.io.confirm_ask("Attempt to fix test errors?")
                     if ok:
                         self.reflected_message = test_errors
                         self.update_cur_messages()
                         return
                 else:
+                    self.repo.save_current_hash(passed, failed)
                     self.io.append_chat_history("The performance did not improve, so we're going to roll back.")
-                    self.repo.revert_to_commit(self.repo.initial_commit_hash)
                     self.num_reflections+=1
                     self.test_history = []
+                    ok = self.io.confirm_ask("Attempt to roll back?")
+                    if ok:
+                        self.iteratively_undo(passed, failed)
+                        self.commits_since_initial  = 0
+                        self.reflected_message = " "
+                        self.update_cur_messages()
+                        return
 
 
         add_rel_files_message = self.check_for_file_mentions(content)
@@ -1466,7 +1490,11 @@ class Coder:
 
         added_fnames = []
         group = ConfirmGroup(new_mentions)
+        i = 0
         for rel_fname in sorted(new_mentions):
+            if i==1:
+                self.test_name = rel_fname
+            i+=1
             if self.io.confirm_ask(f"Add {rel_fname} to the chat?", group=group, allow_never=True):
                 self.add_rel_fname(rel_fname)
                 added_fnames.append(rel_fname)
@@ -1475,7 +1503,7 @@ class Coder:
 
         if added_fnames:
             return prompts.added_files.format(fnames=", ".join(added_fnames))
-
+    
     def send(self, messages, model=None, functions=None):
         if not model:
             model = self.main_model
@@ -1984,6 +2012,7 @@ class Coder:
         return context
 
     def auto_commit(self, edited, context=None):
+        self.commits_since_initial+=1
         if not self.repo or not self.auto_commits or self.dry_run:
             return
 
@@ -2096,14 +2125,26 @@ class Coder:
     def checkout_best_commit(self):
         best_hash = self.repo.initial_commit_hash
         most_passes = -1
-        for rollout in self.repos.previous_commit_hashes:
-            self.repo.revert_to_commit(rollout)
-            test_errors = self.commands.cmd_test(self.test_cmd)
-            passed, _ = parse_test_results(test_errors)
-            if passed> most_passes:
+        labels = {}
+        for hash in self.repo.previous_commit_hashes.keys():
+            passed, failed = self.repo.previous_commit_hashes[hash]
+            self.io.tool_output(f"Commit {hash} passed {passed} and failed {failed} test cases.", bold=True)
+            labels[hash] = passed         
+
+            if passed > most_passes:
                 most_passes = passed
-                best_hash = rollout
-        self.repo.revert_to_commit(best_hash)
+                best_hash = hash
+        self.io.tool_output(f"Reverted to commit {best_hash} which passed {most_passes} test cases.", bold=True)
+        self.repo.repo.git.reset(best_hash, hard=True)
+        # nx.draw(self.commit_graph, with_labels=True, labels=labels, node_color="lightblue", edge_color="gray", node_size=2000, font_size=15)
+        # plt.show()
+        dict_to_csv(self.repo.previous_commit_hashes, self.test_name)
+
+    def iteratively_undo(self, passed, failed):
+        #self.repo.save_current_hash(passed, failed)
+        for i in range(self.commits_since_initial):
+            #self.repo.save_current_hash(passed, failed)
+            self.commands.raw_cmd_undo("")
 
 
     
@@ -2125,5 +2166,43 @@ def performance_improving(history, passed, failed):
         return True
     if history[-1][0] + history[-1][1] != passed+failed:
         return True
-    return passed<history[-1][0]
+    return passed>history[-1][0]
 
+def dict_to_csv(dictionary, filename, column_order=None):
+    """
+    Write a Python dictionary to a CSV file in a specified order.
+    
+    Parameters:
+        dictionary (dict): The dictionary to write to the CSV.
+        csv_filename (str): The name of the output CSV file.
+        column_order (list): List of keys in the desired order for the CSV columns. 
+                             If None, the default order is used.
+                             
+    Returns:
+        None
+    """
+    csv_filename = filename+".csv"
+    if not isinstance(dictionary, dict):
+        raise ValueError("The input must be a dictionary.")
+
+    # If column order is not provided, use the keys in the default order
+    if column_order is None:
+        column_order = list(dictionary.keys())
+
+    # Ensure all specified columns exist in the dictionary
+    if not all(key in dictionary for key in column_order):
+        raise ValueError("Some keys in column_order do not exist in the dictionary.")
+
+    try:
+        with open(csv_filename, mode='w', newline='', encoding='utf-8') as csv_file:
+            writer = csv.writer(csv_file)
+            
+            # Write the header
+            writer.writerow(column_order)
+            
+            # Write the data
+            writer.writerow([dictionary[key] for key in column_order])
+
+        print(f"CSV file '{csv_filename}' has been created successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
