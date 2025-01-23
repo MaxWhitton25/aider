@@ -2,7 +2,7 @@
 platform linux -- Python 3.12.6, pytest-8.3.3, pluggy-1.5.0
 rootdir: /testbed
 configfile: pytest.ini
-plugins: json-report-1.5.0, metadata-3.1.1, cov-5.0.0
+plugins: cov-5.0.0, metadata-3.1.1, json-report-1.5.0
 collected 23 items
 
 tests/test_selector_csstranslator.py FFFF.FFFFF.FFFFFFFFFFFF             [100%]
@@ -247,10 +247,10 @@ self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_attribute_fu
 tests/test_selector_csstranslator.py:178: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11237973f0>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d69b460>
 text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
 type = None, body = b'', encoding = 'utf8', namespaces = None
-root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+root = <object object at 0x7f151ef795d0>, base_url = None, _expr = None
 huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -282,10 +282,10 @@ self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_nested_selec
 tests/test_selector_csstranslator.py:178: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11237974d0>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d69b540>
 text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
 type = None, body = b'', encoding = 'utf8', namespaces = None
-root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+root = <object object at 0x7f151ef795d0>, base_url = None, _expr = None
 huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -317,10 +317,10 @@ self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_pseudoclass_
 tests/test_selector_csstranslator.py:178: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123797070>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d69b0e0>
 text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
 type = None, body = b'', encoding = 'utf8', namespaces = None
-root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+root = <object object at 0x7f151ef795d0>, base_url = None, _expr = None
 huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -352,10 +352,10 @@ self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_selector_sim
 tests/test_selector_csstranslator.py:178: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123615e80>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d519ef0>
 text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
 type = None, body = b'', encoding = 'utf8', namespaces = None
-root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+root = <object object at 0x7f151ef795d0>, base_url = None, _expr = None
 huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -387,10 +387,10 @@ self = <test_selector_csstranslator.CSSSelectorTest testMethod=test_text_pseudo_
 tests/test_selector_csstranslator.py:178: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11237974d0>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d69b540>
 text = '\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/f..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
 type = None, body = b'', encoding = 'utf8', namespaces = None
-root = <object object at 0x7f1124d795d0>, base_url = None, _expr = None
+root = <object object at 0x7f151ef795d0>, base_url = None, _expr = None
 huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -422,10 +422,10 @@ self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_attribu
 tests/test_selector_csstranslator.py:230: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11236162e0>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d51a350>
 text = None, type = None
 body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
-encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f151ef795d0>
 base_url = None, _expr = None, huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -464,10 +464,10 @@ self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_nested_
 tests/test_selector_csstranslator.py:230: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11236166d0>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d51a740>
 text = None, type = None
 body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
-encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f151ef795d0>
 base_url = None, _expr = None, huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -506,10 +506,10 @@ self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_pseudoc
 tests/test_selector_csstranslator.py:230: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f11236169e0>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d51aa50>
 text = None, type = None
 body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
-encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f151ef795d0>
 base_url = None, _expr = None, huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -548,10 +548,10 @@ self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_selecto
 tests/test_selector_csstranslator.py:230: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123616dd0>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d51ae40>
 text = None, type = None
 body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
-encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f151ef795d0>
 base_url = None, _expr = None, huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
@@ -590,10 +590,10 @@ self = <test_selector_csstranslator.CSSSelectorTestBytes testMethod=test_text_ps
 tests/test_selector_csstranslator.py:230: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f1123617150>
+self = <[AttributeError("'Selector' object has no attribute '_expr'") raised in repr()] Selector object at 0x7f151d51b1c0>
 text = None, type = None
 body = b'\n<html>\n<body>\n<div>\n <a id="name-anchor" name="foo"></a>\n <a id="tag-anchor" rel="tag" href="http://localhost/..."cool-footer" id="foobar-div" foobar="ab bc cde">\n    <span id="foobar-span">foo ter</span>\n</div>\n</body></html>\n'
-encoding = 'utf8', namespaces = None, root = <object object at 0x7f1124d795d0>
+encoding = 'utf8', namespaces = None, root = <object object at 0x7f151ef795d0>
 base_url = None, _expr = None, huge_tree = True
 
     def __init__(self, text: Optional[str]=None, type: Optional[str]=None, body: bytes=b'', encoding: str='utf8', namespaces: Optional[Mapping[str, str]]=None, root: Optional[Any]=_NOT_SET, base_url: Optional[str]=None, _expr: Optional[str]=None, huge_tree: bool=LXML_SUPPORTS_HUGE_TREE) -> None:
